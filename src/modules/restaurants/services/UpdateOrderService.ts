@@ -5,11 +5,12 @@ import IRestaurantsRepository from "../repositories/IRestaurantsRepository";
 
 import IFirestoreOrdersRepository from "../repositories/IFirestoreOrdersRepository";
 import IUsersRepository from "../../users/repositories/IUsersRepository";
+import { OrderStatusEnum } from "../../../@types";
 
 interface IRequest {
   user_id: string;
   order_id: string;
-  status: 'accepted' | 'ready' | 'closed';
+  status: OrderStatusEnum;
 }
 
 @injectable()

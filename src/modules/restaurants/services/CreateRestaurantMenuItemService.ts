@@ -15,6 +15,7 @@ interface IRequest {
   quantity: number;
   value: number;
   pictureFilename: string | undefined;
+  isHighlight: boolean;
 }
 @injectable()
 export default class CreateRestaurantMenuService {
@@ -33,7 +34,7 @@ export default class CreateRestaurantMenuService {
     private storageProvider: IStorageProvider,
   ) {}
 
-  public async execute({ name, description, user_id, category_id, value, quantity, pictureFilename = undefined }: IRequest): Promise<MenuItem> {
+  public async execute({ name, description, user_id, category_id, value, quantity, pictureFilename = undefined, isHighlight = false }: IRequest): Promise<MenuItem> {
 
     const user = await this.usersRepository.findById(user_id)
 
@@ -63,7 +64,8 @@ export default class CreateRestaurantMenuService {
       restaurant_id: restaurant.id,
       quantity,
       value,
-      picture
+      picture,
+      isHighlight
     });
 
     return menuItem;

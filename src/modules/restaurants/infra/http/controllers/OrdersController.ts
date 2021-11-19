@@ -11,7 +11,7 @@ export default class OrdersController {
   private updateOrderStatus: UpdateOrderStatusService;
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { observations = '', name, itemId, restaurant_id, table_id, document_orderer, number, quantity, } = req.body
+    const { observations = '', name, itemId, restaurant_id, table_id, document_orderer, number, quantity } = req.body
     this.createOrder = container.resolve(CreateOrderService)
 
     const order = await this.createOrder.execute({ observations, name, itemId, restaurant_id, table_id, document_orderer, number, quantity })

@@ -1,3 +1,4 @@
+import { OrderStatusEnum } from "../../../../../@types";
 
 class Order {
 
@@ -11,7 +12,7 @@ class Order {
 
   table_id: string;
 
-  status: "open" | "accepted" | "ready" | "closed";
+  status: OrderStatusEnum;
 
   quantity: number;
 

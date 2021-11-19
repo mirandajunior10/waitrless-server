@@ -47,7 +47,7 @@ export default class TablesController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const { number } = req.body;
+    const { number } = req.params;
     const { id: user_id } = req.user
 
     this.deleteTable = container.resolve(DeleteTableService)

@@ -6,4 +6,5 @@ export default interface ICreateMenuItemDTO{
   quantity: number;
   value: number;
   picture: string | undefined;
+  isHighlight: boolean;
 }
