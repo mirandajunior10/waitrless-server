@@ -9,10 +9,11 @@ import Table from '../schemas/Table';
 import AppError from '../../../../../shared/errors/AppError';
 import Client from '../schemas/Client';
 import IRenameClientDTO from '../../../dtos/IRenameClientDTO';
+import ICloseBillDTO from '../../../dtos/ICloseBillDTO';
 
 class FirestoreTablesRepository implements IFirestoreTablesRepository {
 
-  public async registerClientOnTable({ cpf, number, restaurant_id }: IRegisterClientDTO): Promise<any> {
+  public async registerClientOnTable({ cpf, number, restaurant_id, name, table_id }: IRegisterClientDTO): Promise<any> {
 
     const firestoreRepository = firestore();
 
@@ -28,7 +29,7 @@ class FirestoreTablesRepository implements IFirestoreTablesRepository {
       .collection('restaurants')
       .doc(restaurant_id)
       .collection('activeTables')
-      .where('number', '==', number)
+      .where('table_id', '==', table_id)
       .limit(1)
       .get()
 
@@ -47,10 +48,11 @@ class FirestoreTablesRepository implements IFirestoreTablesRepository {
         //For the safety of the other clients, their data is removed.
         openTable.clients = [];
 
-        return { table: openTable, user: client }
+        return { table: openTable, user: { ...client, name } }
       } else {
         client = {
           cpf,
+          name,
           created_at: now,
           updated_at: now,
           orders: []
@@ -73,6 +75,7 @@ class FirestoreTablesRepository implements IFirestoreTablesRepository {
       //Abre a mesa, caso não esteja aberta
       let client: Client = {
         cpf,
+        name,
         created_at: now,
         updated_at: now,
         orders: []
@@ -80,6 +83,7 @@ class FirestoreTablesRepository implements IFirestoreTablesRepository {
 
       let table: Table = {
         firestore_table_id: "",
+        table_id,
         restaurant_id,
         number,
         clients: [client],
@@ -124,7 +128,6 @@ class FirestoreTablesRepository implements IFirestoreTablesRepository {
       .doc(firestore_table_id).get()
 
     const tableData: Table | undefined = table.data() as Table
-    console.log(tableData)
 
     if (!tableData) {
       throw new AppError('Something went wrong', 400)
@@ -148,6 +151,46 @@ class FirestoreTablesRepository implements IFirestoreTablesRepository {
       .set(tableData)
 
     return client
+
+  }
+
+  public async fetchOpenTables(restaurant_id: string): Promise<Table[]> {
+
+    const firestoreRepository = firestore();
+
+    const tablesSnapshot = await firestoreRepository
+      .collection('restaurants')
+      .doc(restaurant_id)
+      .collection('activeTables').get()
+
+    const tables = tablesSnapshot.docs.map(doc => doc.data())
+
+    return tables as unknown as Table[]
+
+  }
+  public async closeBill({ restaurant_id, firestore_table_id, cpf }: ICloseBillDTO): Promise<void> {
+
+    const firestoreRepository = firestore();
+
+    const tableSnapshot = await firestoreRepository
+      .collection('restaurants')
+      .doc(restaurant_id)
+      .collection('activeTables').doc(firestore_table_id)
+
+    const table = (await tableSnapshot.get()).data() as Table
+
+    if (!cpf) {
+      await tableSnapshot.delete()
+      return
+    }
+
+    table.clients = table.clients.filter(client => client.cpf != cpf)
+
+    if (table.clients.length === 0) {
+      await tableSnapshot.delete()
+      return
+    }
+    tableSnapshot.update(table)
 
   }
 }

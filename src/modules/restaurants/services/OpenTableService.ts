@@ -10,6 +10,7 @@ interface IRequest {
   number: string;
   restaurant_id: string;
   cpf: string
+  name: string
 }
 
 @injectable()
@@ -26,7 +27,7 @@ export default class OpenTableService {
     private tablesRepository: ITablesRepository,
   ) { }
 
-  public async execute({ number, restaurant_id, cpf }: IRequest): Promise<any> {
+  public async execute({ number, restaurant_id, cpf, name }: IRequest): Promise<any> {
     const restaurant = await this.restaurantsRepository.findById(restaurant_id)
 
     if (!restaurant) {
@@ -38,7 +39,7 @@ export default class OpenTableService {
     if (!table) {
       throw new AppError("Table does not exist.", 400)
     }
-    const response = await this.firestoreTablesRepository.registerClientOnTable({ cpf, restaurant_id, number: Number(number) })
+    const response = await this.firestoreTablesRepository.registerClientOnTable({ cpf, name, restaurant_id, number: Number(number), table_id: table.id })
     return response;
 
   }

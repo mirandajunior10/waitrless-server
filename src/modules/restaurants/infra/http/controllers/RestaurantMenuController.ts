@@ -14,7 +14,7 @@ export default class RestaurantMenuController {
   public async create(req: Request, res: Response): Promise<Response> {
     const { category_id, description, name, value } = req.body;
     let quantity = req.body.quantity || 0;
-    let isHighlight = Boolean(req.body.isHighlight) ?? false;
+    let isHighlight = Boolean(req.body.isHighlight) || false;
     const { id: user_id } = req.user;
     const pictureFilename = req.file ? req.file.filename : undefined
     this.createRestaurantMenuItem = container.resolve(CreateRestaurantMenuItemService)

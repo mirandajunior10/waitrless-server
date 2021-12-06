@@ -11,6 +11,7 @@ import tablesRouter from '../../../../modules/restaurants/infra/http/routes/tabl
 import sessionsRouter from '../../../../modules/users/infra/http/routes/sessions.routes';
 import usersRouter from '../../../../modules/users/infra/http/routes/users.routes';
 import profileRouter from '../../../../modules/users/infra/http/routes/profile.routes';
+import billsRouter from '../../../../modules/restaurants/infra/http/routes/bills.routes';
 
 
 const routes = Router();
@@ -20,6 +21,7 @@ routes.use('/menu', menuRouter);
 routes.use('/orders', ordersRouter);
 routes.use('/restaurants', restaurantsRouter);
 routes.use('/tables', tablesRouter);
+routes.use('/bills', billsRouter);
 
 routes.use('/sessions', sessionsRouter);
 routes.use('/users', usersRouter);

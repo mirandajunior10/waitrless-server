@@ -5,7 +5,7 @@ import IRestaurantsRepository from "../repositories/IRestaurantsRepository";
 
 import IFirestoreOrdersRepository from "../repositories/IFirestoreOrdersRepository";
 import IUsersRepository from "../../users/repositories/IUsersRepository";
-import { OrderStatusEnum } from "../../../@types";
+import { OrderStatusEnum } from "../../../typings";
 
 interface IRequest {
   user_id: string;

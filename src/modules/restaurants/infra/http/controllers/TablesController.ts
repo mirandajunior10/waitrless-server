@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateTableService from '../../../services/CreateTableService';
 import DeleteTableService from '../../../services/DeleteTableService';
+import UpdateTableService from '../../../services/UpdateTableService';
 import TablesRepository from '../../typeorm/repositories/TablesRepository'
 
 export default class TablesController {
   private createTable: CreateTableService;
   private deleteTable: DeleteTableService;
+  private updateTable: UpdateTableService;
 
   public async create(req: Request, res: Response): Promise<Response> {
     const { number } = req.body;
@@ -33,6 +35,7 @@ export default class TablesController {
 
 
   }
+
   public async index(req: Request, res: Response): Promise<Response> {
 
     const { restaurant_id, number } = req.params;
@@ -55,8 +58,18 @@ export default class TablesController {
     const table = await this.deleteTable.execute({ number: Number(number), user_id })
 
     return res.json(table)
+  }
 
+  public async update(req: Request, res: Response): Promise<Response> {
+    const { number } = req.params;
+    const { table_id } = req.body;
+    const { id: user_id } = req.user
 
+    this.updateTable = container.resolve(UpdateTableService)
+
+    const table = await this.updateTable.execute({ number: Number(number), user_id, table_id })
+
+    return res.json(table)
   }
 
 }

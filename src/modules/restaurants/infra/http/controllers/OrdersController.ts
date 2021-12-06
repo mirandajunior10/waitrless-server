@@ -11,10 +11,10 @@ export default class OrdersController {
   private updateOrderStatus: UpdateOrderStatusService;
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { observations = '', name, itemId, restaurant_id, table_id, document_orderer, number, quantity } = req.body
+    const { observations = '', name, itemId, restaurant_id, table_id, document_orderer, tableNumber, quantity, value } = req.body
     this.createOrder = container.resolve(CreateOrderService)
 
-    const order = await this.createOrder.execute({ observations, name, itemId, restaurant_id, table_id, document_orderer, number, quantity })
+    const order = await this.createOrder.execute({ observations, name, itemId, restaurant_id, table_id, document_orderer, tableNumber, quantity, value })
 
     return res.json(order);
 
@@ -28,8 +28,7 @@ export default class OrdersController {
     return res.json(orders);
   }
   public async update(req: Request, res: Response): Promise<Response> {
-    const { order_id } = req.params;
-    const { status } = req.body;
+    const { status, order_id } = req.body;
     const { id: user_id } = req.user;
     this.updateOrderStatus = container.resolve(UpdateOrderStatusService)
 

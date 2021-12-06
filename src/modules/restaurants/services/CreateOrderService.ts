@@ -7,7 +7,7 @@ import IRestaurantsRepository from "../repositories/IRestaurantsRepository";
 import IFirestoreOrdersRepository from "../repositories/IFirestoreOrdersRepository";
 
 interface IRequest {
-  number: string;
+  tableNumber: string;
   restaurant_id: string;
   document_orderer: string;
   table_id: string;
@@ -15,6 +15,7 @@ interface IRequest {
   observations: string;
   quantity: number;
   itemId: string;
+  value: number;
 
 }
 
@@ -32,14 +33,14 @@ export default class CreateOrderService {
     private tablesRepository: ITablesRepository,
   ) { }
 
-  public async execute({ itemId, number, restaurant_id, document_orderer, table_id, name, observations, quantity }: IRequest): Promise<any> {
+  public async execute({ itemId, tableNumber, restaurant_id, document_orderer, table_id, name, observations, quantity, value }: IRequest): Promise<any> {
     const restaurant = await this.restaurantsRepository.findById(restaurant_id)
 
     if (!restaurant) {
       throw new AppError("Restaurant does not exist.", 400)
     }
 
-    const table = await this.tablesRepository.findByRestaurantIdAndNumber(restaurant_id, Number(number))
+    const table = await this.tablesRepository.findByRestaurantIdAndNumber(restaurant_id, Number(tableNumber))
 
     if (!table) {
       throw new AppError("Table does not exist.", 400)
@@ -47,7 +48,7 @@ export default class CreateOrderService {
     if(!name){
       name = document_orderer
     }
-    const response = await this.firestoreOrdersRepository.createOrder({ observations, quantity, itemId, restaurant_id, document_orderer, name, table_id })
+    const response = await this.firestoreOrdersRepository.createOrder({ observations, quantity, itemId, restaurant_id, document_orderer, name, table_id, value })
 
     return response;
 

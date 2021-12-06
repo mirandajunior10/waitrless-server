@@ -7,11 +7,11 @@ export default class TablesSessionController {
 
   public async create(req: Request, res: Response): Promise<Response> {
     const { restaurant_id, number } = req.params;
-    const { cpf } = req.body;
+    const { cpf, name } = req.body;
 
     this.openTable = container.resolve(OpenTableService)
 
-    const table = await this.openTable.execute({ cpf, number, restaurant_id });
+    const table = await this.openTable.execute({ cpf, number, name, restaurant_id });
     return res.json(table)
 
 

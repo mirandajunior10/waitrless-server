@@ -1,4 +1,4 @@
-import { OrderStatusEnum } from "../../../../../@types";
+import { OrderStatusEnum } from "../../../../../typings";
 
 class Order {
 
@@ -17,6 +17,8 @@ class Order {
   quantity: number;
 
   observations: string;
+
+  openDate: string;
 
   created_at: number;
 

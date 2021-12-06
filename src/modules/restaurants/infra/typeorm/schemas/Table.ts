@@ -6,6 +6,8 @@ class Table {
 
   firestore_table_id: string;
 
+  table_id: string;
+
   restaurant_id: string;
 
   number: number;
@@ -13,6 +15,7 @@ class Table {
   clients: Client[];
 
   openDate: string;
+
   open: boolean;
 
   created_at: number;

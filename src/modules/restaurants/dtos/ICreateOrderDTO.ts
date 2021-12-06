@@ -6,4 +6,5 @@ export default interface ICreateOrderDTO {
   itemId: string;
   quantity: number;
   observations: string;
+  value: number;
 }
